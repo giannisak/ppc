@@ -4,12 +4,16 @@ import os
 
 def remove_header_footer(text):
     # Remove header pattern
-    header_pattern = r".*\n.*Topic ID:.*\n.*\n"
-    text = re.sub(header_pattern, "", text)
+    # header_pattern = r".*\n.*Topic ID:.*\n.*\n"
+    # text = re.sub(header_pattern, "", text)
 
     # Remove footer pattern
-    footer_pattern = r"Call:.*\n.*\n.*\n.*\n"
-    text = re.sub(footer_pattern, "", text)
+    # footer_pattern = r"Call:.*\n.*\n.*\n.*\n"
+    # text = re.sub(footer_pattern, "", text)
+
+    # Remove footer pattern
+    header_pattern = r"Call:.*?Re\-GENERATe\] – \[\d+\].\n"
+    text = re.sub(header_pattern, "", text, flags=re.DOTALL)
 
     return text.strip()
 
@@ -29,8 +33,9 @@ def split_pdf_into_subsections(pdf_file_path):
     full_text = remove_header_footer(full_text)
 
     # Find all matches of the title pattern
-    matches = re.finditer(r'(\d+\.\d+\.\d\.+ [^\n]+)', full_text)
-    
+    matches = re.finditer(r'(\d+\.\d+\.\d+.*)', full_text)
+    # matches = re.finditer(r'(\d+\.\d+\.\d+.*\n.*)', full_text)
+
     # Initialize start position for slicing text
     start_pos = 0
     
@@ -60,7 +65,7 @@ def split_pdf_into_subsections(pdf_file_path):
     return titles, subsections
 
 # Example usage
-pdf_file_path = 'C:/Users/Giannis/Documents/ΔΕΗ/prop 2023/LLM4SOC/Proposal-SEP-210987772.pdf'
+pdf_file_path = 'C:/Users/Giannis/Documents/ΔΕΗ/prop 2023/Smart-Nets/Proposal-SEP-210931336.pdf'
 
 # Call the function to split PDF into subsections
 titles, subsections = split_pdf_into_subsections(pdf_file_path)
@@ -78,6 +83,8 @@ if not os.path.exists(output_folder):
 # Iterate through each subsection and save it to a separate text file
 for idx, (title, subsection) in enumerate(zip(titles, subsections)):
     # Replace characters that are not suitable for file names
+    # file_name = re.sub(r'[\\/:*?"<>|\n]', ' ', title)
+    # file_name = file_name[:50]
     file_name = re.sub(r'[\\/:*?"<>|]', ' ', title)
     file_path = os.path.join(output_folder, f"{file_name}.txt")
     
