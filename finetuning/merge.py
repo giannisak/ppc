@@ -12,7 +12,6 @@ model = AutoModelForCausalLM.from_pretrained(base_model_name, trust_remote_code=
 model = PeftModel.from_pretrained(model, hf_adapter_repo)
 model = model.merge_and_unload()
 
-
 # Load the tokenizer
 tokenizer = AutoTokenizer.from_pretrained(hf_adapter_repo)
 
