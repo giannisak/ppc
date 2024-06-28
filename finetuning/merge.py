@@ -12,8 +12,13 @@ model = AutoModelForCausalLM.from_pretrained(base_model_name, trust_remote_code=
 model = PeftModel.from_pretrained(model, hf_adapter_repo)
 model = model.merge_and_unload()
 
+
 # Load the tokenizer
 tokenizer = AutoTokenizer.from_pretrained(hf_adapter_repo)
+
+# Save model and tokenizer
+model.save_pretrained("merged_model", trust_remote_code=True, safe_serialization=True)
+tokenizer.save_pretrained("merged_model")
 
 # Save the merged model and tokenizer to the Hugging Face Model Hub
 merged_model_id = "jak6/Phi3_medium_4k_finetuned"
