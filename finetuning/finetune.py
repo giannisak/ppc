@@ -39,8 +39,8 @@ bnb_4bit_quant_type = "nf4"
 use_double_quant = True
 
 # LoRA configuration
-lora_r = 16
-lora_alpha = 16
+r = 16
+lora_alpha = 32
 lora_dropout = 0.05
 target_modules = ['k_proj', 'q_proj', 'v_proj', 'o_proj', "gate_proj", "down_proj", "up_proj"]
 
@@ -165,11 +165,11 @@ wandb.init(project=project_name, name="Phi-3-medium-QLoRA")
 
 # Define the LoRA configuration
 peft_config = LoraConfig(
-    r=16,
-    lora_alpha=32,
-    lora_dropout=0.05,
+    r=r,
+    lora_alpha=lora_alpha,
+    lora_dropout=lora_dropout,
     task_type="CAUSAL_LM",
-    target_modules=['k_proj', 'q_proj', 'v_proj', 'o_proj', 'gate_proj', 'down_proj', 'up_proj']
+    target_modules=target_modules
 )
 
 # Define the training arguments
