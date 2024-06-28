@@ -175,32 +175,28 @@ peft_config = LoraConfig(
 
 # Define the training arguments
 args = SFTConfig(
-    output_dir="./results_medium",  # The output directory where the model predictions and checkpoints will be written.
-    overwrite_output_dir=True,  # Overwrite the content of the output directory if it exists.
-    do_train=True,  # Whether to run training.
-    do_eval=True,  # Whether to run evaluation on the dev set.
-    per_device_train_batch_size=2,  # Batch size per device for training.
-    per_device_eval_batch_size=2,  # Batch size per device for evaluation.
-    gradient_accumulation_steps=1,  # Number of updates steps to accumulate the gradients for before performing a backward/update pass.
-    learning_rate=5e-5,  # The initial learning rate for Adam.
-    weight_decay=0.0,  # Weight decay if applied.
-    adam_epsilon=1e-8,  # Epsilon for the Adam optimizer.
-    max_grad_norm=1.0,  # Maximum gradient norm.
-    num_train_epochs=3,  # Total number of training epochs to perform.
-    max_steps=-1,  # If set to a positive number, the total number of training steps to perform. Overrides num_train_epochs.
-    warmup_steps=0,  # Number of steps used for a linear warmup from 0 to learning_rate.
-    logging_dir="./logs",  # Tensorboard log directory.
-    logging_first_step=True,  # Log and evaluate the first global_step.
-    logging_steps=10,  # Number of update steps between two logs.
-    save_steps=10,  # Number of update steps before two checkpoint saves.
-    eval_steps=10,  # Number of update steps between two evaluations.
-    save_total_limit=1,  # If a value is passed, limit the total amount of checkpoints. Deletes the older checkpoints.
-    no_cuda=False,  # Whether to not use CUDA even when it is available.
-    seed=42,  # Random seed for initialization.
-    fp16=False,  # Whether to use 16-bit (mixed) precision training through NVIDIA apex.
-    fp16_opt_level='O1',  # For fp16 training, apex AMP optimization level.
-    report_to="wandb",  # Report to Weights & Biases.
-    # evaluation_strategy="steps"
+    output_dir="./results_medium", # The output directory where the model predictions and checkpoints will be written.
+    overwrite_output_dir=True, # Overwrite the content of the output directory if it exists.
+    evaluation_strategy="steps", # Evaluation will be performed after a certain number of training steps.
+    do_train=True, # Whether to run training.
+    do_eval=True, # Whether to run evaluation on the dev set.
+    optim="adamw_torch", # The AdamW optimizer from PyTorch
+    per_device_train_batch_size=2, # Batch size per device for training.
+    per_device_eval_batch_size=2, # Batch size per device for evaluation.
+    gradient_accumulation_steps=4, # Number of updates steps to accumulate the gradients for before performing a backward/update pass.
+    log_level="debug", # log_level' is set to "debug", meaning that all log messages will be printed.
+    save_strategy="epoch", # 'save_strategy' is set to "epoch", meaning that the model will be saved after each epoch.
+    logging_steps=100, # Number of update steps between two logs.
+    learning_rate=1e-4, # The initial learning rate for Adam.
+    fp16 = not torch.cuda.is_bf16_supported(), # Is set to the opposite of whether bfloat16 is supported on the current CUDA device.
+    bf16 = torch.cuda.is_bf16_supported(), # Is set to whether bfloat16 is supported on the current CUDA device.
+    eval_steps=100, # Number of update steps between two evaluations.
+    num_train_epochs=3, # Total number of training epochs to perform.
+    warmup_ratio=0.1, # Is set to 0.1, meaning that 10% of the total training steps will be used for the warmup phase.
+    lr_scheduler_type="linear", # Is set to "linear", meaning that a linear learning rate scheduler will be used.
+    report_to="wandb", # Report to Weights & Biases.
+    seed=42, # Random seed for initialization.
+    
 )
 
 # Construct the SFTTrainer
