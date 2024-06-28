@@ -167,7 +167,7 @@ wandb.init(project=project_name, name="Phi-3-medium-QLoRA")
 # Define the LoRA configuration
 peft_config = LoraConfig(
     r=16,
-    lora_alpha=16,
+    lora_alpha=32,
     lora_dropout=0.05,
     task_type="CAUSAL_LM",
     target_modules=['k_proj', 'q_proj', 'v_proj', 'o_proj', 'gate_proj', 'down_proj', 'up_proj']
@@ -175,28 +175,27 @@ peft_config = LoraConfig(
 
 # Define the training arguments
 args = SFTConfig(
-    output_dir="./results_medium", # The output directory where the model predictions and checkpoints will be written.
-    overwrite_output_dir=True, # Overwrite the content of the output directory if it exists.
-    evaluation_strategy="steps", # Evaluation will be performed after a certain number of training steps.
-    do_train=True, # Whether to run training.
-    do_eval=True, # Whether to run evaluation on the dev set.
-    optim="adamw_torch", # The AdamW optimizer from PyTorch
-    per_device_train_batch_size=2, # Batch size per device for training.
-    per_device_eval_batch_size=2, # Batch size per device for evaluation.
-    gradient_accumulation_steps=4, # Number of updates steps to accumulate the gradients for before performing a backward/update pass.
-    log_level="debug", # log_level' is set to "debug", meaning that all log messages will be printed.
-    save_strategy="epoch", # 'save_strategy' is set to "epoch", meaning that the model will be saved after each epoch.
-    logging_steps=100, # Number of update steps between two logs.
-    learning_rate=1e-4, # The initial learning rate for Adam.
-    fp16 = not torch.cuda.is_bf16_supported(), # Is set to the opposite of whether bfloat16 is supported on the current CUDA device.
-    bf16 = torch.cuda.is_bf16_supported(), # Is set to whether bfloat16 is supported on the current CUDA device.
-    eval_steps=100, # Number of update steps between two evaluations.
-    num_train_epochs=3, # Total number of training epochs to perform.
-    warmup_ratio=0.1, # Is set to 0.1, meaning that 10% of the total training steps will be used for the warmup phase.
-    lr_scheduler_type="linear", # Is set to "linear", meaning that a linear learning rate scheduler will be used.
-    report_to="wandb", # Report to Weights & Biases.
-    seed=42, # Random seed for initialization.
-    
+    output_dir="./results_medium",  # Directory for model predictions and checkpoints.
+    overwrite_output_dir=True,  # Overwrite the output directory if it exists.
+    evaluation_strategy="steps",  # Evaluate after a certain number of steps.
+    do_train=True,  # Enable training.
+    do_eval=True,  # Enable evaluation.
+    optim="adamw_torch",  # Use AdamW optimizer.
+    per_device_train_batch_size=2,  # Training batch size per device.
+    per_device_eval_batch_size=2,  # Evaluation batch size per device.
+    gradient_accumulation_steps=4,  # Accumulate gradients before backward pass.
+    log_level="debug",  # Log all messages.
+    save_strategy="epoch",  # Save model after each epoch.
+    logging_steps=100,  # Log at regular intervals.
+    learning_rate=1e-4,  # Initial learning rate.
+    fp16=not torch.cuda.is_bf16_supported(),  # Use fp16 if bfloat16 not supported.
+    bf16=torch.cuda.is_bf16_supported(),  # Use bfloat16 if supported.
+    eval_steps=100,  # Evaluate at regular intervals.
+    num_train_epochs=3,  # Number of training epochs.
+    warmup_ratio=0.1,  # Warmup phase ratio.
+    lr_scheduler_type="linear",  # Use linear learning rate scheduler.
+    report_to="wandb",  # Report to Weights & Biases.
+    seed=42,  # Random seed.
 )
 
 # Construct the SFTTrainer
