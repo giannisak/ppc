@@ -20,7 +20,6 @@ import os
 # Set Global Parameters
 
 # Model and dataset identifiers
-model_id = "microsoft/Phi-3-medium-128k-instruct" 
 model_name = "microsoft/Phi-3-medium-128k-instruct" 
 dataset_name = "/home/llm-server/jak/cook/subsections.csv"
 
@@ -63,7 +62,7 @@ dataset = Dataset.from_pandas(df)
 # print(f"dataset size: {len(dataset)}")
 
 # Load the tokenizer
-tokenizer_id = model_id
+tokenizer_id = model_name
 tokenizer = AutoTokenizer.from_pretrained(tokenizer_id)
 tokenizer.padding_side = 'right'  # to prevent warnings
 
