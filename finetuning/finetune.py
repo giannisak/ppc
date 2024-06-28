@@ -61,7 +61,6 @@ dataset = Dataset.from_pandas(df)
 
 # Display the size and a random sample from the dataset
 # print(f"dataset size: {len(dataset)}")
-# print(dataset[randrange(len(dataset))])
 
 # Load the Tokenizer
 
